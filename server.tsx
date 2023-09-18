@@ -19,16 +19,17 @@ app.get("/", (ctx) =>
           on click
             toggle @disabled on me
             fetch /api/random?mb=100 as response then
-              set :startTime to performance.now()
+              set bytes to 0
+              set startTime to performance.now()
               set reader to result.body.getReader()
               repeat forever
                 set result to reader.read()
-                if result.done break  
+                if result.done break
                 else
-                  increment :bytes by result.value.length
+                  increment bytes by result.value.length
 
-                  set mb to :bytes / 1024 / 1024
-                  set seconds to (performance.now() - :startTime) / 1000
+                  set mb to bytes / 1024 / 1024
+                  set seconds to (performance.now() - startTime) / 1000
                   set speed to mb / seconds
 
                   put `${mb.toFixed(2)} MB` into #mb
