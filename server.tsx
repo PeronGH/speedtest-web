@@ -14,13 +14,25 @@ app.get("/", (ctx) =>
     <Page title="Index Page">
       <div class="container mx-auto p-4">
         <button
-          id="load-btn"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          hx-get="/load"
-          hx-target="#content"
-          hx-swap="outerHTML"
+          _="
+          on click
+            toggle @disabled on me
+            fetch /api/random?mb=100 as response then
+              set :startTime to performance.now()
+              set reader to result.body.getReader()
+              repeat forever
+                set result to reader.read()
+                if result.done break  
+                else
+                  increment :bytes by result.value.length
+                  set kbytes to :bytes / ((performance.now() - :startTime) / 1000) / 1024 / 1024
+                  put `${kbytes.toFixed(2)} MB/s` into #content
+                end
+              end
+              toggle @disabled on me"
         >
-          Load
+          Test
         </button>
         <div id="content" />
       </div>
