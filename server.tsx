@@ -11,7 +11,7 @@ app.route("/api", apiRouter);
 
 app.get("/", (ctx) =>
   ctx.html(
-    <Page title="Index Page">
+    <Page title="Speed Test">
       <div class="container mx-auto p-4">
         <button
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -26,18 +26,28 @@ app.get("/", (ctx) =>
                 if result.done break  
                 else
                   increment :bytes by result.value.length
-                  set kbytes to :bytes / ((performance.now() - :startTime) / 1000) / 1024 / 1024
-                  put `${kbytes.toFixed(2)} MB/s` into #content
+
+                  set mb to :bytes / 1024 / 1024
+                  set seconds to (performance.now() - :startTime) / 1000
+                  set speed to mb / seconds
+
+                  put `${mb.toFixed(2)} MB` into #mb
+                  put `${seconds.toFixed(2)} seconds` into #seconds
+                  put `${speed.toFixed(2)} MB/s` into #speed
                 end
               end
               toggle @disabled on me"
         >
           Test
         </button>
-        <div id="content" />
+        <div>
+          <p id="mb" />
+          <p id="seconds" />
+          <p id="speed" />
+        </div>
       </div>
     </Page>,
   ));
 
 app.get("*", serveStatic({ root: "./static/" }));
-Deno.serve(app.fetch);
+Deno.serve({ hostname: "0.0.0.0", port: 8080 }, app.fetch);
