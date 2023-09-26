@@ -12,7 +12,7 @@ apiRouter.get(
       mb: z.string()
         .default("1")
         .transform((value) => parseInt(value))
-        .pipe(z.number().positive().lte(100)),
+        .pipe(z.number().positive().lte(1024)),
     }),
   ),
   (ctx) => {
